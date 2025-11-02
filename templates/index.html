@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>BoardScanner</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+<div class="flex flex-col justify-between items-center min-h-screen">
+    <div class="flex items-center justify-center gap-5 h-20">
+        <ul class="steps">
+            <li id="original_frame" class="step step-primary">Frame original</li>
+            <!--<li id="hsv_frame" class="step">HSV</li>-->
+            <li id="hsv_mask_frame" class="step">Máscara</li>
+            <li id="canny_frame" class="step">Canny</li>
+            <li id="closure_frame" class="step">Cierre morfológico</li>
+            <li id="contour_frame" class="step">Contorno</li>
+            <li id="board_frame" class="step">Pizarra transformada</li>
+            <li id="board_adaptive_threshold_frame" class="step">Umbral adaptativo</li>
+            <li id="board_dilated_frame" class="step">Dilatación</li>
+            <li id="board_with_word_contours_frame" class="step">Regiones de palabras</li>
+            <li id="emnist_knn_frame" class="step">EMNIST KNN</li>
+            <li id="emnist_mlp_frame" class="step">EMNIST MLP</li>
+            <li id="google_vision_frame" class="step">Google Vision API</li>
+        </ul>
+    </div>
+
+    <div class="flex flex-col items-center justify-center flex-1">
+        <img id="camera_feed" src="original_frame" alt="Cámara">
+    </div>
+
+    <button id="download_button" class="btn">Descargar imagen</button>
+
+    <script>
+        const items = document.querySelectorAll('li');
+        const feed = document.getElementById('camera_feed');
+        const downloadBtn = document.getElementById('download_button');
+
+        items.forEach(item => {
+            item.addEventListener('click', function() {
+                items.forEach(li => li.classList.remove('step-primary'));
+                this.classList.add('step-primary');
+                feed.src = `/${this.id}`;
+            });
+        });
+
+        downloadBtn.addEventListener('click', function() {
+            const currentStep = document.querySelector('.step-primary').id;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = feed.naturalWidth;
+            canvas.height = feed.naturalHeight;
+
+            ctx.drawImage(feed, 0, 0);
+
+            canvas.toBlob(function(blob) {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `${currentStep}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }, 'image/jpeg', 0.95);
+        });
+    </script>
+</div>
+</body>
+</html>
