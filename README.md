@@ -13,8 +13,6 @@ El sistema utiliza OpenCV y TensorFlow, entre otras bibliotecas, para realizar e
 3. [Instalación](#instalación)
 4. [Uso](#uso)
 5. [Estructura del Proyecto](#estructura-del-proyecto)
-6. [Ejemplo](#ejemplo)
-7. [Créditos](#créditos)
 
 ---
 
